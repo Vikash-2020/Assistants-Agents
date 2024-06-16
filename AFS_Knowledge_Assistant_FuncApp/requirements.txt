@@ -1,0 +1,9 @@
+# DO NOT include azure-functions-worker in this file
+# The Python Worker is managed by Azure Functions platform
+# Manually managing azure-functions-worker may cause unexpected issues
+# openai==1.3.7
+
+azure-functions
+openai
+langchain==0.0.341
+duckduckgo_search==3.9.10
