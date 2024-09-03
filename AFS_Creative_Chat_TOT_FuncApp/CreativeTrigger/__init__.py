@@ -11,33 +11,9 @@ from langchain.tools import BaseTool
 client = AzureOpenAI(
     # defaults to os.environ.get("OPENAI_API_KEY")
     api_version= "2024-02-15-preview",
-    api_key="6e9d4795bb89425286669b5952afe2fe",
-    # base_url="https://danielingitaraj-gpt4turbo.openai.azure.com/"
-    base_url="https://danielingitaraj-gpt4turbo.openai.azure.com/openai/deployments/GPT4Turbo/chat/completions?api-version=2024-02-15-preview"
+    api_key="",
+    base_url=""
 )
-
-# # gpt-4
-# client = AzureOpenAI(
-#     # defaults to os.environ.get("OPENAI_API_KEY")
-#     api_version= "2023-12-01-preview",
-#     api_key="a5c4e09a50dd4e13a69e7ef19d07b48c",
-#     # base_url="https://danielingitaraj.openai.azure.com/"
-#     base_url="https://danielingitaraj.openai.azure.com/openai/deployments/DanielGPT4/chat/completions?api-version=2023-12-01-preview"
-# )
-
-# gpt 35 turbo 16k
-# client = AzureOpenAI(
-#     api_version= "2023-12-01-preview",
-#     api_key="c09f91126e51468d88f57cb83a63ee36",
-#     base_url="https://chat-gpt-a1.openai.azure.com/openai/deployments/DanielChatGPT16k/chat/completions?api-version=2023-12-01-preview"
-# )
-
-# gpt 35 turbo 4K
-# client = AzureOpenAI(
-#     api_version= "2023-12-01-preview",
-#     api_key="c09f91126e51468d88f57cb83a63ee36",
-#     base_url="https://chat-gpt-a1.openai.azure.com/openai/deployments/DanielChatGPT/chat/completions?api-version=2023-12-01-preview"
-# )
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
@@ -46,12 +22,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if not chat_history:
         return "Invalid Request Error"
 
-    # print("*************************************************")
-    # print(chat_history)
-    # print("*************************************************")
-    # print(type(chat_history))
-    # print("*************************************************")
-
 
     if chat_history:
         class BingSearchTool(BaseTool):
@@ -59,8 +29,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             description = "useful for when you need to answer questions about current events"
 
             def _run(self, query: str) -> str:
-                # subscription_key = "6637a6554ede48ba9e240d97c318f4ec"
-                subscription_key = "13835b8353af4f31959388f1494c29eb"
+                subscription_key = ""
                 endpoint = "https://api.bing.microsoft.com/v7.0/search"
                 
                 # Define the market as en-US
@@ -99,7 +68,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
         def get_data(query):
             # print("Sending request to Creative Tool.")
-            endpoint_url = "https://afscreativewritingassistant.azurewebsites.net/api/Creative_Trigger?code=iL5YhIkNHddNhV0jH06pfu7LY-gbrlbdZvasJWlj2iPuAzFuPd9gog=="  # Replace with your actual endpoint URL
+            endpoint_url = ""  # Replace with your actual endpoint URL
 
             print(type(query))
             print(query['query'])
@@ -165,9 +134,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             response = client.chat.completions.create(
                 messages= messages,
                 model="GPT4Turbo",
-                # model="DanielGPT4",
-                # model="DanielChatGPT16k",
-                # model="DanielChatGPT",
                 functions=func,
                 function_call=function_call,
                 temperature=temperature,
