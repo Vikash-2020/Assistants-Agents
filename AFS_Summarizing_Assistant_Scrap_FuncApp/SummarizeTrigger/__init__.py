@@ -10,19 +10,10 @@ import azure.functions as func
 client = AzureOpenAI(
     # defaults to os.environ.get("OPENAI_API_KEY")
     api_version= "2023-12-01-preview",
-    api_key="6e9d4795bb89425286669b5952afe2fe",
-    # base_url="https://danielingitaraj-gpt4turbo.openai.azure.com/"
-    base_url="https://danielingitaraj-gpt4turbo.openai.azure.com/openai/deployments/GPT4Turbo/chat/completions?api-version=2023-12-01-preview"
+    api_key="",
+    base_url=""
 )
 
-# # gpt-4
-# client = AzureOpenAI(
-#     # defaults to os.environ.get("OPENAI_API_KEY")
-#     api_version= "2023-12-01-preview",
-#     api_key="a5c4e09a50dd4e13a69e7ef19d07b48c",
-#     # base_url="https://danielingitaraj.openai.azure.com/"
-#     base_url="https://danielingitaraj.openai.azure.com/openai/deployments/DanielGPT4/chat/completions?api-version=2023-12-01-preview"
-# )
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -32,19 +23,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if not chat_history:
         return "Invalid Request Error"
 
-    # print("*************************************************")
-    # print(chat_history)
-    # print("*************************************************")
-    # print(type(chat_history))
-    # print("*************************************************")
-
 
     if chat_history:
         
         # tool
         def Scraper(input_data):
-            # endpoint_url = "https://dataformatterllm.azurewebsites.net/api/TriggerFormatter?code=LEvekwwQT5SNHM2ibQN9prC1oWbVENiUGTqlWXjvA98tAzFuoJFCmQ=="  # Replace with your actual endpoint URL
-            endpoint_url = "https://webscraptool.azurewebsites.net/"  # Replace with your actual endpoint URL
+            endpoint_url = ""  # Replace with your actual endpoint URL
             print("calling Data formatter function")
             try:
                 response = requests.post(endpoint_url, json=input_data)
@@ -106,7 +90,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             response = client.chat.completions.create(
                 messages= messages,
                 model="GPT4Turbo",
-                # model="DanielGPT4",
                 functions=func,
                 function_call=function_call,
                 temperature=temperature,
