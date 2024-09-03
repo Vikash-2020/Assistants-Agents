@@ -12,39 +12,15 @@ from openai import AzureOpenAI
 
 
 
-
-# openai.api_type = "azure"
-# openai.api_base = "https://chat-gpt-a1.openai.azure.com/"
-# openai.api_version = "2023-12-01-preview"
-# # openai.api_key = os.getenv("OPENAI_API_KEY")
-# openai.api_key = "c09f91126e51468d88f57cb83a63ee36"
-
-
-# gpt 4 turbo
-
-
 # gpt-4 turbo 128k
 client = AzureOpenAI(
     # defaults to os.environ.get("OPENAI_API_KEY")
     api_version= "2024-02-15-preview",
-    api_key="6e9d4795bb89425286669b5952afe2fe",
-    # base_url="https://danielingitaraj-gpt4turbo.openai.azure.com/"
-    base_url="https://danielingitaraj-gpt4turbo.openai.azure.com/openai/deployments/GPT4Turbo/chat/completions?api-version=2024-02-15-preview"
+    api_key="",
+    # base_url=""
+    base_url=""
 )
 
-
-# openai.api_type = "azure"
-# openai.api_base = "https://danielingitaraj-gpt4turbo.openai.azure.com/openai/deployments/GPT4Turbo/chat/completions?api-version=2024-02-15-preview"
-# openai.api_version = "2024-02-15-preview"
-# openai.api_key = "6e9d4795bb89425286669b5952afe2fe"
-
-# gpt 4
-
-# openai.api_type = "azure"
-# openai.api_base = "https://danielingitaraj.openai.azure.com/"
-# openai.api_version = "2023-12-01-preview"
-# openai.api_key = "a5c4e09a50dd4e13a69e7ef19d07b48c"
-# # engine="DanielGPT4"
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -60,21 +36,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             query = req_body.get('question')
 
     if query:
-        # def llm(prompt_data):
-        #     response = openai.ChatCompletion.create(
-        #         engine="GPT4Turbo",
-        #         model="GPT4Turbo",
-        #         messages = prompt_data,
-        #         temperature=0,
-        #         max_tokens=900,
-        #         top_p=1,
-        #         frequency_penalty=0,
-        #         presence_penalty=0,
-        #         stop=None)
-        #     message_content = response["choices"][0]["message"]["content"]
-        #     total_tokens_used = response["usage"]["total_tokens"]
-
-        #     return message_content, total_tokens_used
         
         def llm(prompt_data):
 
@@ -82,9 +43,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             response = client.chat.completions.create(
                 messages= prompt_data,
                 model="GPT4Turbo",
-                # model="DanielGPT4",
-                # model="DanielChatGPT16k",
-                # model="DanielChatGPT",
                 temperature=0,
                 max_tokens=900,
                 top_p=1,
@@ -117,8 +75,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             description = "useful for when you need to answer questions about current events"
 
             def _run(self, query: str) -> str:
-                # subscription_key = "6637a6554ede48ba9e240d97c318f4ec"
-                subscription_key = "13835b8353af4f31959388f1494c29eb"
+                subscription_key = ""
                 endpoint = "https://api.bing.microsoft.com/v7.0/search"
                 
                 # Define the market as en-US
@@ -294,61 +251,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             if not done:
                 return {"Input": question, "Output": "Agent Stopped Due to Iteration Limit Exceed Error"}
 
-        # def self_ask_plan_execute(question):
-        #     que = f"""```\n{json.dumps({"Iteration": 1, "Question": question})}\n```"""
-        #     prompt = sys_message.copy()
-        #     prompt.append({"role":"user","content":que})
-
-        #     n_calls, n_badcalls = 0, 0
-        #     for i in range(1,8):
-        #         if i < 7:
-        #             n_calls += 1
-
-        #             response, total_tokens = llm(prompt)
-        #             # print(f"total token usage: {total_tokens}")
-
-        #             validated_data, validation_error = validate_dict(json.loads(response.strip("```")))
-
-        #             if validated_data:
-        #                 thought = validated_data.Thought
-        #                 action = validated_data.Action
-                    
-        #             else:
-        #                 print(f"Bad Call....\n{validation_error}")
-        #                 n_badcalls += 1
-        #                 n_calls += 1
-        #                 continue
-                    
-        #             observ, done = perform_action(action)
-        #             # obs = obs.replace('\\n', '')
-        #             obs = f"""```\n{json.dumps({"Iteration": i,"Observation": observ})}\n```"""
-        #             # print(type(obs))
-
-        #             prompt.append({"role":"assistant","content":response})
-        #             prompt.append({"role":"user","content" : obs})
-
-        #             if done:
-        #                 return {"Input": question, "Output": observ}
-                    
-        #         else:
-        #             # final response query
-        #             final_query = {
-        #                 "Iteration": 7,
-        #                 "Thought": "Iteration Limit Exceeded, generating Finish Response with available data.",
-        #                 "Action": "Finish[GENERATE YOUR FINAL REPORT HERE USING GATHERED INFO]"
-        #             }
-                    
-        #             final_query = f"""```\n{json.dumps(final_query)}\n```"""
-        #             finish_response,error = validate_dict(llm(final_query).strip("```"))
-        #             if finish_response:
-        #                 observ, done = perform_action((finish_response.Action))
-        #                 return {"Input": question, "Output": observ}
-        #             else:
-        #                 return {"Input": question, "Output": error}
-
-        #     if not done:
-        #         return {"Input": question, "Output": "Agent Stopped Due to Iteration Limit Exceed Error"}
-
+       
         try:
             ans = self_ask_plan_execute(query)
             return func.HttpResponse(json.dumps(ans), status_code=200)
